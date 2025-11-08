@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title != null ? title + ' - Equipment Rental' : 'Equipment Rental'}">Equipment Rental</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar">
+    <div class="container">
+        <div class="nav-brand">
+            <a th:href="@{/}">Equipment Rental</a>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a th:href="@{/}">Home</a></li>
+
+            <li sec:authorize="hasRole('ADMIN')" class="dropdown">
+                <a href="#" class="dropdown-toggle">Admin ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a th:href="@{/admin/equipment}">Materiaal Beheer</a></li>
+                    <li><a th:href="@{/admin/users}">Gebruikers</a></li>
+                </ul>
+            </li>
+            <li><a th:href="@{/catalog}">Catalogus</a></li>
+
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/cart}">Winkelmand</a>
+            </li>
+
+            <li sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}">Login</a>
+            </li>
+            <li sec:authorize="!isAuthenticated()">
+                <a th:href="@{/register}" class="btn-primary">Registreren</a>
+            </li>
+
+
+            <li sec:authorize="isAuthenticated()">
+                <span class="user-welcome">
+                    Welkom, <strong sec:authentication="principal.username"></strong>
+                    <span sec:authorize="hasRole('ADMIN')" class="role-badge-nav">Admin</span>
+                </span>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn-secondary">Uitloggen</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+    <div th:fragment="content">
+    </div>
+</main>
+
+<footer>
+    <div class="container" th:fragment="footer">
+        <p>&copy; 2025 EHB Rental Platform</p>
+    </div>
+</footer>
+</body>
+</html>

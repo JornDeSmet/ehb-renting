@@ -1,13 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{base :: header('Home')}"></head>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - EHB Rental</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-    <div th:replace="~{base :: nav}"></div>
+<div th:replace="~{layout/base :: navbar}"></div>
 
-    <div th:fragment="content">
-        <h1>Welcome to EHB Renting!</h1>
+<div class="hero">
+    <div class="container">
+        <h1>Welkom bij EHB Rental</h1>
+        <p>Reserveer en huur professioneel materiaal voor je projecten</p>
+        <a th:href="@{/catalog}" class="btn-primary btn-large">Bekijk Catalogus</a>
     </div>
+</div>
 
-    <div th:replace="~{base :: footer}"></div>
+<main class="container">
+    <section class="features">
+        <div class="feature-card">
+            <h3>📦 Uitgebreid Aanbod</h3>
+            <p>Lampen, podiumelementen, kabels en meer</p>
+        </div>
+        <div class="feature-card">
+            <h3>🔍 Eenvoudig Zoeken</h3>
+            <p>Vind snel wat je nodig hebt met filters</p>
+        </div>
+        <div class="feature-card">
+            <h3>✅ Reserveer Online</h3>
+            <p>Kies je periode en bevestig direct</p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Klaar om te beginnen?</h2>
+        <div class="cta-buttons">
+            <a sec:authorize="!isAuthenticated()" th:href="@{/register}" class="btn-primary">Registreer Nu</a>
+            <a th:href="@{/catalog}" class="btn-secondary">Bekijk Materiaal</a>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
 </body>
 </html>

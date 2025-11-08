@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - Equipment Rental'">Registreren - EHB Rental</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout/base :: navbar}"></div>
+
+<main class="container">
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Registreren</h2>
+
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <form th:action="@{/register}"
+                  th:object="${registerDTO}"
+                  method="post"
+                  class="auth-form">
+
+                <div class="form-group">
+                    <label for="username">Gebruikersnaam:</label>
+                    <input type="text" id="username" th:field="*{username}" class="form-control" required>
+                    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control" required>
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="firstName">Voornaam:</label>
+                    <input type="text" id="firstName" th:field="*{firstName}" class="form-control" required>
+                    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Achternaam:</label>
+                    <input type="text" id="lastName" th:field="*{lastName}" class="form-control" required>
+                    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Wachtwoord:</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control" required>
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Bevestig Wachtwoord:</label>
+                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" required>
+                    <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="invalid-feedback"></span>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Registreren</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Heb je al een account? <a th:href="@{/login}">Log hier in</a></p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
+</body>
+</html>
