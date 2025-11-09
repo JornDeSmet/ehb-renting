@@ -6,6 +6,7 @@ import com.example.ehbrenting.repository.RentalRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RentalService {
@@ -18,5 +19,25 @@ public class RentalService {
 
     public List<Rental> findRentalsByUser(User user) {
         return rentalRepository.findByUser(user);
+    }
+
+    public List<Rental> findAll() {
+        return rentalRepository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        rentalRepository.deleteById(id);
+    }
+
+    public Optional<Rental> findById(Long id) {
+        return rentalRepository.findById(id);
+    }
+
+    public void updateRental(Long id, Rental rental) {
+        rentalRepository.findById(id).ifPresent(existingRental -> {
+            existingRental.setQuantity(rental.getQuantity());
+            existingRental.setStatus(rental.getStatus());
+            rentalRepository.save(existingRental);
+        });
     }
 }

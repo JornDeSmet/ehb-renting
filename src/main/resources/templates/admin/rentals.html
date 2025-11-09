@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserveringen Beheren</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout/base :: navbar}"></div>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Reserveringen Beheren</h1>
+    </div>
+
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>Gebruiker</th>
+                <th>Product</th>
+                <th>Aantal</th>
+                <th>Startdatum</th>
+                <th>Einddatum</th>
+                <th>Status</th>
+                <th>Acties</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rental : ${rentals}">
+                <td th:text="${rental.user.username}"></td>
+                <td th:text="${rental.equipment.name}"></td>
+                <td th:text="${rental.quantity}"></td>
+                <td th:text="${#temporals.format(rental.startDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${#temporals.format(rental.endDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${rental.status}"></td>
+                <td>
+                    <a th:href="@{/admin/rentals/edit/{id}(id=${rental.id})}" class="btn-primary">Wijzigen</a>
+                    <form th:action="@{/admin/rentals/delete/{id}(id=${rental.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn-danger">Verwijderen</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
+</body>
+</html>
