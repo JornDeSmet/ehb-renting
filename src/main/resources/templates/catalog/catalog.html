@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - Equipment Rental'">Catalogus</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout/base :: navbar}"></div>
+
+<main class="container">
+    <div class="catalog-header">
+        <h1 th:text="${title}">Catalogus</h1>
+        <p class="text-muted">Blader door ons uitgebreide aanbod van professioneel materiaal.</p>
+    </div>
+
+    <div class="catalog-filters">
+        <form th:action="@{/catalog}" method="get" class="search-form">
+            <input type="text" name="search" class="search-input" placeholder="Zoek op naam..." th:value="${searchQuery}">
+            <button type="submit" class="btn-primary">Zoeken</button>
+        </form>
+
+        <div class="category-filters">
+            <a th:href="@{/catalog}" class="category-btn" th:classappend="${selectedCategory == null} ? 'active'">Alles</a>
+            <a th:each="cat : ${categories}"
+               th:href="@{/catalog(category=${cat})}"
+               th:text="${cat}"
+               class="category-btn"
+               th:classappend="${cat == selectedCategory} ? 'active'">
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${!equipmentList.isEmpty()}">
+        <div class="equipment-grid">
+            <a th:each="equipment : ${equipmentList}" th:href="@{/equipment/{id}(id=${equipment.id})}" class="equipment-card-link">
+                <div class="equipment-card">
+                    <div class="equipment-image">
+                        <img th:if="${equipment.imageUrl != null and !equipment.imageUrl.isEmpty()}" th:src="${equipment.imageUrl}" alt="Equipment Image">
+                        <div th:unless="${equipment.imageUrl != null and !equipment.imageUrl.isEmpty()}" class="no-image">?</div>
+                    </div>
+                    <div class="equipment-info">
+                        <span class="equipment-category" th:text="${equipment.category}">Categorie</span>
+                        <h3 th:text="${equipment.name}">Equipment Naam</h3>
+                        <p class="equipment-description" th:text="${#strings.abbreviate(equipment.description, 100)}">Korte beschrijving...</p>
+                        <div class="card-action">
+                            <span class="view-details-btn">Bekijk Details →</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${equipmentList.isEmpty()}" class="empty-state">
+        <h2>Geen resultaten</h2>
+        <p>Er werd geen materiaal gevonden dat aan je criteria voldoet. Probeer een andere zoekterm of categorie.</p>
+        <a th:href="@{/catalog}" class="btn-primary">Toon alle materiaal</a>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
+</body>
+</html>

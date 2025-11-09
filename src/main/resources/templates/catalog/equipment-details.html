@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${equipment.name} + ' - Equipment Rental'">Equipment Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout/base :: navbar}"></div>
+
+<main class="container">
+    <div class="breadcrumb">
+        <a th:href="@{/catalog}">← Terug naar catalogus</a>
+    </div>
+
+    <div class="equipment-detail-container">
+        <div class="equipment-detail-content">
+            <div class="equipment-detail-image">
+                <img th:if="${equipment.imageUrl != null and !equipment.imageUrl.isEmpty()}"
+                     th:src="${equipment.imageUrl}"
+                     th:alt="${equipment.name}"
+                     class="detail-image">
+                <div th:unless="${equipment.imageUrl != null and !equipment.imageUrl.isEmpty()}" class="no-image-large">?</div>
+            </div>
+
+            <div class="equipment-detail-info">
+                <div class="equipment-header">
+                    <span class="category-badge" th:text="${equipment.category}">Category</span>
+                    <h1 th:text="${equipment.name}">Equipment Name</h1>
+                    <p class="equipment-description" th:text="${equipment.description}">Full description of the equipment.</p>
+                </div>
+
+                <div class="equipment-specs">
+                    <h3>Specificaties</h3>
+                    <div class="spec-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">Prijs per dag:</span>
+                            <span class="spec-value" th:text="'€' + ${#numbers.formatDecimal(equipment.pricePerDay, 1, 2)}">€10.00</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Totaal Aantal:</span>
+                            <span class="spec-value" th:text="${equipment.quantity}">10</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Status:</span>
+                            <span th:if="${equipment.active and equipment.quantity > 0}" class="status-badge status-available">Beschikbaar</span>
+                            <span th:unless="${equipment.active and equipment.quantity > 0}" class="status-badge status-unavailable">Niet beschikbaar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="equipment-actions">
+                    <div sec:authorize="isAuthenticated()">
+                        <div th:if="${equipment.active and equipment.quantity > 0}">
+                            <form th:action="@{/cart/add}" method="post">
+                                <input type="hidden" name="equipmentId" th:value="${equipment.id}" />
+                                <button type="submit" class="btn-primary btn-large btn-block">Voeg toe aan winkelmandje</button>
+                                <p class="action-hint">Datums en aantal worden in de winkelmand gekozen.</p>
+                            </form>
+                        </div>
+                        <div th:unless="${equipment.active and equipment.quantity > 0}" class="out-of-stock-message">
+                            <p>Dit materiaal is momenteel niet beschikbaar voor verhuur.</p>
+                        </div>
+                    </div>
+
+                    <div sec:authorize="!isAuthenticated()">
+                        <div class="login-prompt">
+                            <p>Je moet ingelogd zijn om materiaal te kunnen huren.</p>
+                            <a th:href="@{/login}" class="btn-primary btn-large">Inloggen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
+</body>
+</html>

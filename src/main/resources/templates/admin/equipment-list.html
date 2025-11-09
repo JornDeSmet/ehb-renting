@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - Equipment Rental'">Materiaal Beheer</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout/base :: navbar}"></div>
+
+<main class="container">
+    <div class="page-header">
+        <h1 th:text="${title}">Materiaal Beheer</h1>
+        <a th:href="@{/admin/equipment/add}" class="btn-primary">+ Nieuw Materiaal</a>
+    </div>
+
+    <div th:if="${param.success}" class="alert alert-success">
+        <span th:if="${param.success[0] == 'added'}">Nieuw materiaal succesvol toegevoegd!</span>
+        <span th:if="${param.success[0] == 'updated'}">Materiaal succesvol bijgewerkt!</span>
+        <span th:if="${param.success[0] == 'deleted'}">Materiaal succesvol verwijderd!</span>
+    </div>
+
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Naam</th>
+                <th>Categorie</th>
+                <th>Prijs/dag</th>
+                <th>Aantal</th>
+                <th>Status</th>
+                <th>Acties</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="equipment : ${equipmentList}">
+                <td th:text="${equipment.id}">1</td>
+                <td th:text="${equipment.name}">Sample Name</td>
+                <td th:text="${equipment.category}">Sample Category</td>
+                <td th:text="'€' + ${#numbers.formatDecimal(equipment.pricePerDay, 1, 2)}">€10.00</td>
+                <td th:text="${equipment.quantity}">10</td>
+                <td>
+                    <span th:if="${equipment.active}" class="status-badge status-active">Actief</span>
+                    <span th:unless="${equipment.active}" class="status-badge status-inactive">Inactief</span>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a th:href="@{/admin/equipment/edit/{id}(id=${equipment.id})}" class="btn-small btn-edit">Bewerken</a>
+                        <form th:action="@{/admin/equipment/delete/{id}(id=${equipment.id})}" method="post" onsubmit="return confirm('Weet je zeker dat je dit item wilt verwijderen?');">
+                            <button type="submit" class="btn-small btn-delete">Verwijderen</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${equipmentList.isEmpty()}">
+                <td colspan="7" style="text-align: center;">Er is nog geen materiaal in het systeem.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
+</body>
+</html>
