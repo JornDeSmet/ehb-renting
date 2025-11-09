@@ -846,3 +846,49 @@ body {
         margin: 1rem 0 0.5rem 0;
     }
 }
+
+.availability-section {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.availability-section h3 {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+#availability-calendar {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+}
+
+#availability-calendar table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#availability-calendar th,
+#availability-calendar td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#availability-calendar thead th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+#availability-calendar tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#availability-calendar tbody tr:hover {
+    background-color: #f8fafc;
+}

@@ -1,12 +1,17 @@
 package com.example.ehbrenting.service;
 
+import com.example.ehbrenting.dto.AvailabilityDTO;
 import com.example.ehbrenting.dto.EquipmentDTO;
 import com.example.ehbrenting.model.Equipment;
+import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.repository.EquipmentRepository;
+import com.example.ehbrenting.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,10 +20,12 @@ import java.util.stream.Collectors;
 public class EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
+    private final RentalRepository rentalRepository;
 
     @Autowired
-    public EquipmentService(EquipmentRepository equipmentRepository) {
+    public EquipmentService(EquipmentRepository equipmentRepository, RentalRepository rentalRepository) {
         this.equipmentRepository = equipmentRepository;
+        this.rentalRepository = rentalRepository;
     }
 
     private EquipmentDTO convertToDTO(Equipment equipment) {
@@ -95,5 +102,29 @@ public class EquipmentService {
                 .distinct()
                 .sorted()
                 .toList();
+    }
+
+    public List<AvailabilityDTO> getAvailability(Long equipmentId, LocalDate from, LocalDate to) {
+        List<AvailabilityDTO> availabilityList = new ArrayList<>();
+        Optional<Equipment> equipmentOpt = equipmentRepository.findById(equipmentId);
+        if (equipmentOpt.isEmpty()) {
+            return availabilityList;
+        }
+        Equipment equipment = equipmentOpt.get();
+        int totalQuantity = equipment.getQuantity();
+
+        List<Rental> rentals = rentalRepository.findRentalsForEquipmentInDateRange(equipmentId, from, to);
+
+        for (LocalDate date = from; !date.isAfter(to); date = date.plusDays(1)) {
+            int rentedQuantity = 0;
+            for (Rental rental : rentals) {
+                if (!date.isBefore(rental.getStartDate()) && !date.isAfter(rental.getEndDate())) {
+                    rentedQuantity += rental.getQuantity();
+                }
+            }
+            availabilityList.add(new AvailabilityDTO(date, totalQuantity - rentedQuantity));
+        }
+
+        return availabilityList;
     }
 }

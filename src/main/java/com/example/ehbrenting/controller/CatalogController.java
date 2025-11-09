@@ -1,14 +1,18 @@
 package com.example.ehbrenting.controller;
 
+import com.example.ehbrenting.dto.AvailabilityDTO;
 import com.example.ehbrenting.dto.EquipmentDTO;
 import com.example.ehbrenting.service.EquipmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -107,5 +111,14 @@ public class CatalogController {
     public String deleteEquipment(@PathVariable Long id) {
         equipmentService.deleteEquipment(id);
         return "redirect:/admin/equipment?success=deleted";
+    }
+
+    @GetMapping("/catalog/products/{id}/availability")
+    @ResponseBody
+    public ResponseEntity<List<AvailabilityDTO>> getAvailability(
+            @PathVariable("id") Long productId,
+            @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+        return ResponseEntity.ok(equipmentService.getAvailability(productId, from, to));
     }
 }

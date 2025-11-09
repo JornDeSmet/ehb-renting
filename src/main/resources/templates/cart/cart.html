@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Winkelwagen</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{layout/base :: navbar}"></div>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Winkelwagen</h1>
+    </div>
+
+    <div th:if="${cartItems.isEmpty()}" class="empty-state">
+        <p>Je winkelwagen is leeg.</p>
+        <a th:href="@{/catalog}" class="btn-primary">Bekijk de catalogus</a>
+    </div>
+
+    <div th:unless="${cartItems.isEmpty()}">
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Aantal</th>
+                    <th>Huurperiode</th>
+                    <th>Prijs per dag</th>
+                    <th>Totaal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cartItems}">
+                    <td th:text="${item.equipment.name}">Productnaam</td>
+                    <td th:text="${item.quantity}">1</td>
+                    <td th:text="${#temporals.format(item.startDate, 'dd-MM-yyyy')} + ' - ' + ${#temporals.format(item.endDate, 'dd-MM-yyyy')}"></td>
+                    <td th:text="'€' + ${#numbers.formatDecimal(item.equipment.pricePerDay, 1, 2)}">€10.00</td>
+                    <td th:text="'€' + ${#numbers.formatDecimal(item.equipment.pricePerDay.multiply(T(java.time.temporal.ChronoUnit).DAYS.between(item.startDate, item.endDate) + 1).multiply(item.quantity), 1, 2)}">€50.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-actions" style="justify-content: flex-end; margin-top: 2rem;">
+            <form th:action="@{/cart/confirm}" method="post">
+                <button type="submit" class="btn-primary btn-large">Bevestig Huur</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
+</body>
+</html>
