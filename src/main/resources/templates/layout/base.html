@@ -28,6 +28,10 @@
             <li sec:authorize="isAuthenticated()">
                 <a th:href="@{/cart}">Winkelmand</a>
             </li>
+            
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/profile}">Mijn Profiel</a>
+            </li>
 
             <li sec:authorize="!isAuthenticated()">
                 <a th:href="@{/login}">Login</a>

@@ -53,4 +53,12 @@ public class UserService {
         return savedUser;
     }
 
+    @Transactional
+    public void updateUser(Long userId, String firstName, String lastName) {
+        userRepository.findById(userId).ifPresent(user -> {
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            userRepository.save(user);
+        });
+    }
 }

@@ -15,4 +15,6 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     List<Rental> findRentalsForEquipmentInDateRange(@Param("equipmentId") Long equipmentId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     List<Rental> findByUserAndStatus(User user, Rental.RentalStatus status);
+
+    List<Rental> findByUser(User user);
 }
