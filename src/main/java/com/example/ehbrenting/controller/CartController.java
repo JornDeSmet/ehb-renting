@@ -1,6 +1,6 @@
 package com.example.ehbrenting.controller;
 
-import com.example.ehbrenting.dto.CartItemDto;
+import com.example.ehbrenting.dto.CartItemDTO;
 import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.service.CartService;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public String addToCart(CartItemDto cartItemDto, Principal principal) {
+    public String addToCart(CartItemDTO cartItemDto, Principal principal) {
         if (principal == null) {
             return "redirect:/login";
         }

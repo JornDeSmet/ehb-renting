@@ -2,17 +2,17 @@ package com.example.ehbrenting.dto;
 
 import java.time.LocalDate;
 
-public class CartItemDto {
+public class CartItemDTO {
 
     private Long equipmentId;
     private int quantity;
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public CartItemDto() {
+    public CartItemDTO() {
     }
 
-    public CartItemDto(Long equipmentId, int quantity, LocalDate startDate, LocalDate endDate) {
+    public CartItemDTO(Long equipmentId, int quantity, LocalDate startDate, LocalDate endDate) {
         this.equipmentId = equipmentId;
         this.quantity = quantity;
         this.startDate = startDate;

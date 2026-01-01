@@ -51,10 +51,27 @@
                     </div>
                 </div>
 
-                <div class="availability-section">
+                <div class="availability-section" th:if="${isAvailable}">
                     <h3>Beschikbaarheid</h3>
-                    <div id="availability-calendar"></div>
+                    <div id="availability-calendar">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Beschikbaar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="availability : ${availabilityList}">
+                                <td th:text="${availability.date}"></td>
+                                <td th:text="${availability.available}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+
 
                 <div class="equipment-actions">
                     <div sec:authorize="isAuthenticated()">
@@ -96,38 +113,6 @@
 <footer class="footer">
     <div th:replace="~{layout/base :: footer}"></div>
 </footer>
-
-<script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        const equipmentId = /*[[${equipment.id}]]*/ 'default';
-        const availabilityCalendar = document.getElementById('availability-calendar');
-        const startDateInput = document.getElementById('startDate');
-        const endDateInput = document.getElementById('endDate');
-
-        function fetchAvailability() {
-            const today = new Date();
-            const from = today.toISOString().split('T')[0];
-            const to = new Date(today.setDate(today.getDate() + 30)).toISOString().split('T')[0]; // Next 30 days
-
-            fetch(`/catalog/products/${equipmentId}/availability?from=${from}&to=${to}`)
-                .then(response => response.json())
-                .then(data => {
-                    let calendarHtml = '<table><thead><tr><th>Datum</th><th>Beschikbaar</th></tr></thead><tbody>';
-                    data.forEach(item => {
-                        calendarHtml += `<tr><td>${item.date}</td><td>${item.available}</td></tr>`;
-                    });
-                    calendarHtml += '</tbody></table>';
-                    availabilityCalendar.innerHTML = calendarHtml;
-                })
-                .catch(error => {
-                    console.error('Error fetching availability:', error);
-                    availabilityCalendar.innerHTML = '<p>Kon beschikbaarheid niet laden.</p>';
-                });
-        }
-
-        fetchAvailability();
-    });
-</script>
 
 </body>
 </html>

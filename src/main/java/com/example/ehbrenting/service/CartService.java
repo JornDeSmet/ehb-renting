@@ -1,6 +1,6 @@
 package com.example.ehbrenting.service;
 
-import com.example.ehbrenting.dto.CartItemDto;
+import com.example.ehbrenting.dto.CartItemDTO;
 import com.example.ehbrenting.model.Equipment;
 import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.model.User;
@@ -27,7 +27,7 @@ public class CartService {
     }
 
     @Transactional
-    public void addToCart(String username, CartItemDto cartItemDto) {
+    public void addToCart(String username, CartItemDTO cartItemDto) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
