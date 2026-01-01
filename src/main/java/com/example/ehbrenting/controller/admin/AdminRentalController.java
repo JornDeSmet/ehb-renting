@@ -18,9 +18,7 @@ public class AdminRentalController {
         this.rentalService = rentalService;
     }
 
-    /**
-     * Overzicht van alle reservaties
-     */
+
     @GetMapping
     public String listRentals(Model model) {
         model.addAttribute("rentals", rentalService.findAll());
@@ -28,9 +26,7 @@ public class AdminRentalController {
         return "admin/rentals";
     }
 
-    /**
-     * Toon edit-formulier voor een reservatie
-     */
+
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
 
@@ -43,9 +39,7 @@ public class AdminRentalController {
         return "admin/edit-rental";
     }
 
-    /**
-     * Verwerk update van reservatie
-     */
+
     @PostMapping("/edit/{id}")
     public String updateRental(
             @PathVariable Long id,
@@ -62,9 +56,7 @@ public class AdminRentalController {
         return "redirect:/admin/rentals?success=updated";
     }
 
-    /**
-     * Verwijder een reservatie
-     */
+
     @PostMapping("/delete/{id}")
     public String deleteRental(@PathVariable Long id) {
         rentalService.deleteById(id);
