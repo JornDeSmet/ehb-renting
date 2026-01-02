@@ -527,6 +527,11 @@ body {
     padding: 1rem;
     font-size: 0.95rem;
 }
+.alert-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
 .form-container {
     max-width: 800px;
     margin: 3rem auto;

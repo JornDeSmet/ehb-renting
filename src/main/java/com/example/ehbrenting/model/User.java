@@ -75,4 +75,6 @@ public class User implements UserDetails {
         STAFF,
         ADMIN
     }
+
+
 }

@@ -23,17 +23,29 @@
             <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
 
             <form th:action="@{/login}" method="post" class="auth-form">
+
+                <div th:if="${param.error}" class="alert alert-error">
+                    Ongeldige gebruikersnaam of wachtwoord
+                </div>
+
+                <div th:if="${param.logout}" class="alert alert-success">
+                    Je bent uitgelogd.
+                </div>
+
                 <div class="form-group">
                     <label for="username">Gebruikersnaam:</label>
-                    <input type="text" id="username" name="username" class="form-control" required autofocus>
+                    <input type="text" id="username" name="username" class="form-control" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Wachtwoord:</label>
                     <input type="password" id="password" name="password" class="form-control" required>
                 </div>
+
                 <button type="submit" class="btn-primary btn-block">Inloggen</button>
             </form>
+
+
 
             <div class="auth-footer">
                 <p>Nog geen account? <a th:href="@{/register}">Registreer hier</a></p>

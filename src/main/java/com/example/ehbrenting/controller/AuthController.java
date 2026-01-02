@@ -1,6 +1,9 @@
 package com.example.ehbrenting.controller;
 
-import com.example.ehbrenting.dto.RegisterDTO;
+import com.example.ehbrenting.dto.user.RegisterDTO;
+import com.example.ehbrenting.exceptions.EmailAlreadyExistsException;
+import com.example.ehbrenting.exceptions.PasswordMismatchException;
+import com.example.ehbrenting.exceptions.UsernameAlreadyExistsException;
 import com.example.ehbrenting.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+
 @Controller
 public class AuthController {
 
@@ -19,6 +23,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage(Model model) {
+        model.addAttribute("title", "Login");
         return "auth/login";
     }
 
@@ -36,20 +41,51 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid RegisterDTO registerDTO, BindingResult result, RedirectAttributes redirectAttributes){
+    public String register(
+            @Valid RegisterDTO registerDTO,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
         if (result.hasErrors()) {
             return "auth/register";
         }
 
         try {
-            userService.RegisterUser(registerDTO);
-            redirectAttributes.addFlashAttribute("success",
-                    "Registration successful! Please login.");
-            return "redirect:/login";
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/register";
+            userService.register(registerDTO);
         }
+        catch (PasswordMismatchException e) {
+            result.rejectValue(
+                    "confirmPassword",
+                    "error.confirmPassword",
+                    e.getMessage()
+            );
+            return "auth/register";
+        }
+        catch (UsernameAlreadyExistsException e) {
+            result.rejectValue(
+                    "username",
+                    "error.username",
+                    e.getMessage()
+            );
+            return "auth/register";
+        }
+        catch (EmailAlreadyExistsException e) {
+            result.rejectValue(
+                    "email",
+                    "error.email",
+                    e.getMessage()
+            );
+            return "auth/register";
+        }
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Registration successful! Please login."
+        );
+        return "redirect:/login";
     }
+
+
+
 
 }
