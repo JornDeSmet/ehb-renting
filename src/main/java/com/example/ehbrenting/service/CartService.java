@@ -19,47 +19,68 @@ public class CartService {
     private final RentalRepository rentalRepository;
     private final EquipmentRepository equipmentRepository;
     private final UserRepository userRepository;
+    private final EquipmentAvailabilityService availabilityService;
 
-    public CartService(RentalRepository rentalRepository, EquipmentRepository equipmentRepository, UserRepository userRepository) {
+    public CartService(
+            RentalRepository rentalRepository,
+            EquipmentRepository equipmentRepository,
+            UserRepository userRepository,
+            EquipmentAvailabilityService availabilityService
+    ) {
         this.rentalRepository = rentalRepository;
         this.equipmentRepository = equipmentRepository;
         this.userRepository = userRepository;
+        this.availabilityService = availabilityService;
     }
 
-    @Transactional
-    public void addToCart(String username, CartItemDTO cartItemDto) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    /* ===================== ADD TO CART ===================== */
 
-        Equipment equipment = equipmentRepository.findById(cartItemDto.getEquipmentId())
+    @Transactional
+    public void addToCart(User user, CartItemDTO dto) {
+
+        availabilityService.validateRentalRequest(
+                dto.getEquipmentId(),
+                dto.getStartDate(),
+                dto.getEndDate(),
+                dto.getQuantity()
+        );
+
+        Equipment equipment = equipmentRepository.findById(dto.getEquipmentId())
                 .orElseThrow(() -> new IllegalArgumentException("Equipment not found"));
 
         Rental rental = new Rental();
         rental.setUser(user);
         rental.setEquipment(equipment);
-        rental.setQuantity(cartItemDto.getQuantity());
-        rental.setStartDate(cartItemDto.getStartDate());
-        rental.setEndDate(cartItemDto.getEndDate());
+        rental.setQuantity(dto.getQuantity());
+        rental.setStartDate(dto.getStartDate());
+        rental.setEndDate(dto.getEndDate());
         rental.setStatus(Rental.RentalStatus.IN_CART);
 
         rentalRepository.save(rental);
     }
 
-    public List<Rental> getCartItems(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-        return rentalRepository.findByUserAndStatus(user, Rental.RentalStatus.IN_CART);
+    /* ===================== VIEW CART ===================== */
+
+    public List<Rental> getCartItems(User user) {
+        return rentalRepository.findByUserAndStatus(
+                user,
+                Rental.RentalStatus.IN_CART
+        );
     }
 
+    /* ===================== CONFIRM ORDER ===================== */
+
     @Transactional
-    public void confirmOrder(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-        List<Rental> cartItems = rentalRepository.findByUserAndStatus(user, Rental.RentalStatus.IN_CART);
+    public void confirmOrder(User user) {
+
+        List<Rental> cartItems =
+                rentalRepository.findByUserAndStatus(
+                        user,
+                        Rental.RentalStatus.IN_CART
+                );
 
         for (Rental item : cartItems) {
             item.setStatus(Rental.RentalStatus.CONFIRMED);
-            rentalRepository.save(item);
         }
     }
 }

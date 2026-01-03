@@ -18,12 +18,16 @@ public class AdminEquipmentController {
         this.equipmentService = equipmentService;
     }
 
+    /* ===================== LIST ===================== */
+
     @GetMapping
     public String listEquipment(Model model) {
-        model.addAttribute("equipmentList", equipmentService.getAllEquipment());
+        model.addAttribute("equipmentList", equipmentService.findAll());
         model.addAttribute("title", "Materiaal Beheer");
         return "admin/equipment-list";
     }
+
+    /* ===================== ADD ===================== */
 
     @GetMapping("/add")
     public String showAddForm(Model model) {
@@ -36,22 +40,25 @@ public class AdminEquipmentController {
     public String addEquipment(
             @Valid @ModelAttribute("equipmentDto") EquipmentDTO equipmentDto,
             BindingResult result,
-            Model model) {
-
+            Model model
+    ) {
         if (result.hasErrors()) {
             model.addAttribute("title", "Materiaal Toevoegen");
             return "admin/equipment-form";
         }
 
-        equipmentService.saveEquipment(equipmentDto);
+        equipmentService.createOrUpdate(equipmentDto);
         return "redirect:/admin/equipment?success=added";
     }
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    /* ===================== EDIT ===================== */
 
-        EquipmentDTO equipmentDto = equipmentService.getEquipmentById(id)
-                .orElseThrow(() -> new RuntimeException("Materiaal niet gevonden"));
+    @GetMapping("/edit/{id}")
+    public String showEditForm(
+            @PathVariable Long id,
+            Model model
+    ) {
+        EquipmentDTO equipmentDto = equipmentService.findByIdOrThrow(id);
 
         model.addAttribute("equipmentDto", equipmentDto);
         model.addAttribute("title", "Materiaal Bewerken");
@@ -63,21 +70,23 @@ public class AdminEquipmentController {
             @PathVariable Long id,
             @Valid @ModelAttribute("equipmentDto") EquipmentDTO equipmentDto,
             BindingResult result,
-            Model model) {
-
+            Model model
+    ) {
         if (result.hasErrors()) {
             model.addAttribute("title", "Materiaal Bewerken");
             return "admin/equipment-form";
         }
 
         equipmentDto.setId(id);
-        equipmentService.saveEquipment(equipmentDto);
+        equipmentService.createOrUpdate(equipmentDto);
         return "redirect:/admin/equipment?success=updated";
     }
 
+    /* ===================== DELETE ===================== */
+
     @PostMapping("/delete/{id}")
     public String deleteEquipment(@PathVariable Long id) {
-        equipmentService.deleteEquipment(id);
+        equipmentService.deleteById(id);
         return "redirect:/admin/equipment?success=deleted";
     }
 }

@@ -14,6 +14,16 @@
     <div class="breadcrumb">
         <a th:href="@{/catalog}">← Terug naar catalogus</a>
     </div>
+    <div th:if="${error}"
+         class="alert alert-error"
+         th:text="${error}">
+    </div>
+
+    <div th:if="${success}"
+         class="alert alert-success"
+         th:text="${success}">
+    </div>
+
 
     <div class="equipment-detail-container">
         <div class="equipment-detail-content">

@@ -785,6 +785,55 @@ body {
     text-decoration: underline;
     color: var(--primary-hover);
 }
+
+/* ===========================
+   Equipment detail – rental form
+   =========================== */
+
+.equipment-actions form {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Fix date + number inputs */
+.equipment-actions input[type="date"],
+.equipment-actions input[type="number"] {
+    height: 44px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+}
+
+/* Labels beter uitlijnen */
+.equipment-actions .form-group label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+/* Quantity input smaller maken */
+.equipment-actions input[type="number"] {
+    max-width: 120px;
+}
+
+/* Button spacing */
+.equipment-actions button {
+    margin-top: 0.5rem;
+}
+
+/* Availability table spacing */
+.availability-section {
+    margin-bottom: 2rem;
+}
+
+/* Alerts niet tegen content laten plakken */
+.alert {
+    margin-top: 1rem;
+}
+
 @media (max-width: 1024px) {
     .equipment-detail-content {
         grid-template-columns: 1fr;

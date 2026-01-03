@@ -2,14 +2,17 @@ package com.example.ehbrenting.controller;
 
 import com.example.ehbrenting.dto.CartItemDTO;
 import com.example.ehbrenting.model.Rental;
+import com.example.ehbrenting.model.User;
 import com.example.ehbrenting.service.CartService;
+import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -22,32 +25,71 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    /* ===================== ADD TO CART ===================== */
+
     @PostMapping("/add")
-    public String addToCart(CartItemDTO cartItemDto, Principal principal) {
-        if (principal == null) {
+    public String addToCart(
+            @Valid CartItemDTO cartItemDto,
+            @AuthenticationPrincipal User user,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (user == null) {
             return "redirect:/login";
         }
-        cartService.addToCart(principal.getName(), cartItemDto);
-        return "redirect:/cart";
+
+        try {
+            cartService.addToCart(user, cartItemDto);
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Item toegevoegd aan winkelwagen"
+            );
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    e.getMessage()
+            );
+        }
+
+        return "redirect:/equipment/" + cartItemDto.getEquipmentId();
     }
 
+    /* ===================== VIEW CART ===================== */
+
     @GetMapping
-    public String showCart(Model model, Principal principal) {
-        if (principal == null) {
+    public String showCart(
+            @AuthenticationPrincipal User user,
+            Model model
+    ) {
+        if (user == null) {
             return "redirect:/login";
         }
-        List<Rental> cartItems = cartService.getCartItems(principal.getName());
+
+        List<Rental> cartItems = cartService.getCartItems(user);
+
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("title", "Winkelwagen");
+
         return "cart/cart";
     }
 
+    /* ===================== CONFIRM ORDER ===================== */
+
     @PostMapping("/confirm")
-    public String confirmOrder(Principal principal) {
-        if (principal == null) {
+    public String confirmOrder(
+            @AuthenticationPrincipal User user,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (user == null) {
             return "redirect:/login";
         }
-        cartService.confirmOrder(principal.getName());
+
+        cartService.confirmOrder(user);
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Bestelling succesvol bevestigd"
+        );
+
         return "redirect:/profile";
     }
 }
