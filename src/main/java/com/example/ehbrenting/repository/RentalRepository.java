@@ -13,7 +13,6 @@ import java.util.List;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
 
-    // ===== Bestaand =====
     @Query("""
         SELECT r FROM Rental r
         WHERE r.equipment.id = :equipmentId
@@ -30,7 +29,6 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     List<Rental> findByUserAndStatus(User user, Rental.RentalStatus status);
     List<Rental> findByUser(User user);
 
-    // ===== ADMIN: pagination + filters =====
 
     @Query("""
         SELECT r FROM Rental r

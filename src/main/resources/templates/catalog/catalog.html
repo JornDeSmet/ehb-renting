@@ -62,7 +62,6 @@
 
     <div class="pagination" th:if="${totalPages > 1}">
 
-        <!-- Vorige -->
         <a th:if="${currentPage > 0}"
            th:href="@{/catalog(
            page=${currentPage - 1},
@@ -71,7 +70,6 @@
        )}"
            class="page-btn">← Vorige</a>
 
-        <!-- Eerste pagina -->
         <span th:if="${startPage > 0}">
         <a th:href="@{/catalog(
             page=0,
@@ -82,7 +80,6 @@
         <span class="dots">…</span>
     </span>
 
-        <!-- Pagina nummers -->
         <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
         <a th:href="@{/catalog(
             page=${i},
@@ -95,7 +92,6 @@
         </a>
     </span>
 
-        <!-- Laatste pagina -->
         <span th:if="${endPage < totalPages - 1}">
         <span class="dots">…</span>
         <a th:href="@{/catalog(
@@ -108,7 +104,6 @@
         </a>
     </span>
 
-        <!-- Volgende -->
         <a th:if="${currentPage < totalPages - 1}"
            th:href="@{/catalog(
            page=${currentPage + 1},

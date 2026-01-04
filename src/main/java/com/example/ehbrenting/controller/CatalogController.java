@@ -29,7 +29,6 @@ public class CatalogController {
         this.availabilityService = availabilityService;
     }
 
-    /* ===================== CATALOG ===================== */
 
     @GetMapping("/catalog")
     public String showCatalog(
@@ -83,7 +82,6 @@ public class CatalogController {
 
 
 
-    /* ===================== DETAILS ===================== */
 
     @GetMapping("/equipment/{id}")
     public String equipmentDetails(

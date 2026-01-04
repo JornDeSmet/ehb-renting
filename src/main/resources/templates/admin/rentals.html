@@ -70,7 +70,6 @@
     </div>
     <div class="pagination" th:if="${totalPages > 1}">
 
-        <!-- Vorige -->
         <a th:if="${currentPage > 0}"
            th:href="@{/admin/rentals(
            page=${currentPage - 1},
@@ -83,7 +82,6 @@
             ← Vorige
         </a>
 
-        <!-- Eerste pagina + ... -->
         <span th:if="${startPage > 0}">
         <a th:href="@{/admin/rentals(
             page=0,
@@ -96,7 +94,6 @@
         <span class="dots">…</span>
     </span>
 
-        <!-- Midden pagina's -->
         <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
         <a th:href="@{/admin/rentals(
             page=${i},
@@ -111,7 +108,6 @@
         </a>
     </span>
 
-        <!-- Laatste pagina + ... -->
         <span th:if="${endPage < totalPages - 1}">
         <span class="dots">…</span>
         <a th:href="@{/admin/rentals(
@@ -126,7 +122,6 @@
         </a>
     </span>
 
-        <!-- Volgende -->
         <a th:if="${currentPage < totalPages - 1}"
            th:href="@{/admin/rentals(
            page=${currentPage + 1},

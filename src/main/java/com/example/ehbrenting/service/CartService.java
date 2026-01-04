@@ -7,7 +7,6 @@ import com.example.ehbrenting.model.User;
 import com.example.ehbrenting.repository.EquipmentRepository;
 import com.example.ehbrenting.repository.RentalRepository;
 import com.example.ehbrenting.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,22 +17,18 @@ public class CartService {
 
     private final RentalRepository rentalRepository;
     private final EquipmentRepository equipmentRepository;
-    private final UserRepository userRepository;
     private final EquipmentAvailabilityService availabilityService;
 
     public CartService(
             RentalRepository rentalRepository,
             EquipmentRepository equipmentRepository,
-            UserRepository userRepository,
             EquipmentAvailabilityService availabilityService
     ) {
         this.rentalRepository = rentalRepository;
         this.equipmentRepository = equipmentRepository;
-        this.userRepository = userRepository;
         this.availabilityService = availabilityService;
     }
 
-    /* ===================== ADD TO CART ===================== */
 
     @Transactional
     public void addToCart(User user, CartItemDTO dto) {
@@ -59,7 +54,6 @@ public class CartService {
         rentalRepository.save(rental);
     }
 
-    /* ===================== VIEW CART ===================== */
 
     public List<Rental> getCartItems(User user) {
         return rentalRepository.findByUserAndStatus(
@@ -68,7 +62,6 @@ public class CartService {
         );
     }
 
-    /* ===================== CONFIRM ORDER ===================== */
 
     @Transactional
     public void confirmOrder(User user) {

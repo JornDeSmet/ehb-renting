@@ -30,7 +30,6 @@ public class UserProfileController {
         this.rentalService = rentalService;
     }
 
-    /* ===================== PROFIEL PAGINA ===================== */
 
     @GetMapping
     public String profile(
@@ -42,7 +41,6 @@ public class UserProfileController {
         return "user/profile";
     }
 
-    /* ===================== PROFIEL UPDATE ===================== */
 
     @PostMapping("/update")
     public String updateProfile(
@@ -67,7 +65,6 @@ public class UserProfileController {
         return "redirect:/profile";
     }
 
-    /* ===================== WACHTWOORD WIJZIGEN ===================== */
 
     @PostMapping("/password")
     public String changePassword(
@@ -103,7 +100,6 @@ public class UserProfileController {
         return "redirect:/profile";
     }
 
-    /* ===================== MIJN RESERVERINGEN ===================== */
 
     @GetMapping("/rentals")
     public String myRentals(

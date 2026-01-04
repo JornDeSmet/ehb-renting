@@ -68,7 +68,6 @@ public class AdminUserController {
     }
 
 
-    // ================= CREATE =================
     @GetMapping("/add")
     public String showCreateForm(Model model) {
         model.addAttribute("userDto", new AdminCreateUserDTO());
@@ -149,7 +148,6 @@ public class AdminUserController {
         return "redirect:/admin/users";
     }
 
-    // ================= ENABLE / DISABLE =================
     @PostMapping("/{id}/toggle")
     public String toggleEnabled(
             @PathVariable Long id,
@@ -163,7 +161,6 @@ public class AdminUserController {
         return "redirect:/admin/users";
     }
 
-    // ================= HELPERS =================
     private String returnCreateForm(Model model) {
         model.addAttribute("showPassword", true);
         model.addAttribute("action", "/admin/users/add");

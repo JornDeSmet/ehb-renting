@@ -25,7 +25,6 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    /* ===================== ADD TO CART ===================== */
 
     @PostMapping("/add")
     public String addToCart(
@@ -53,7 +52,6 @@ public class CartController {
         return "redirect:/equipment/" + cartItemDto.getEquipmentId();
     }
 
-    /* ===================== VIEW CART ===================== */
 
     @GetMapping
     public String showCart(
@@ -72,7 +70,6 @@ public class CartController {
         return "cart/cart";
     }
 
-    /* ===================== CONFIRM ORDER ===================== */
 
     @PostMapping("/confirm")
     public String confirmOrder(

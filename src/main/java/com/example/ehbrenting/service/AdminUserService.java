@@ -33,13 +33,11 @@ public class AdminUserService {
                 );
     }
 
-    // ================= FIND =================
     public User findByIdOrThrow(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    // ================= CREATE =================
     public void createUser(AdminCreateUserDTO dto) {
 
         if (userRepository.existsByUsername(dto.getUsername())) {
@@ -62,7 +60,6 @@ public class AdminUserService {
         userRepository.save(user);
     }
 
-    // ================= EDIT =================
     public AdminCreateUserDTO getUserForEdit(Long id) {
         User user = findByIdOrThrow(id);
 
@@ -100,7 +97,6 @@ public class AdminUserService {
         userRepository.save(user);
     }
 
-    // ================= ENABLE / DISABLE =================
     public void toggleEnabled(Long id) {
         User user = findByIdOrThrow(id);
         user.setEnabled(!user.isEnabled());

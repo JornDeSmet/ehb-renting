@@ -1,23 +1,14 @@
 package com.example.ehbrenting.service;
-
-import com.example.ehbrenting.dto.AvailabilityDTO;
 import com.example.ehbrenting.dto.EquipmentDTO;
 import com.example.ehbrenting.mapper.EquipmentMapper;
-import com.example.ehbrenting.model.Equipment;
-import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.repository.EquipmentRepository;
-import com.example.ehbrenting.repository.RentalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EquipmentService {

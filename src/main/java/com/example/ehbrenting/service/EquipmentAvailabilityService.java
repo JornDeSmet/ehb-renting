@@ -29,7 +29,6 @@ public class EquipmentAvailabilityService {
         this.rentalRepository = rentalRepository;
     }
 
-    /* ===================== PUBLIC API ===================== */
 
     public void validateRentalRequest(
             Long equipmentId,
@@ -64,7 +63,6 @@ public class EquipmentAvailabilityService {
         return availability;
     }
 
-    /* ===================== VALIDATION ===================== */
 
     private void validateDates(LocalDate start, LocalDate end) {
         LocalDate today = LocalDate.now();
@@ -115,7 +113,6 @@ public class EquipmentAvailabilityService {
         }
     }
 
-    /* ===================== HELPERS ===================== */
 
     private Equipment getEquipment(Long id) {
         return equipmentRepository.findById(id)
