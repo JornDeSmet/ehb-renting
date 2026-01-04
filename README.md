@@ -18,13 +18,13 @@ Beheerders kunnen het materiaal en de reservaties opvolgen en beheren.
 ## 🛠️ Technologieën
 
 ### Backend
-- Java 17  
-- Spring Boot  
+- Java 25  
+- Spring Boot 3.5.7  
 - Spring MVC  
 - Spring Data JPA  
 - Spring Security  
-- BCrypt Password Encoder  
 - Hibernate  
+- BCrypt Password Encoder  
 
 ### Frontend
 - Thymeleaf  
@@ -218,11 +218,22 @@ Wachtwoord: admin123
 ---
 
 ## 📄 Documentatie
-Deze documentatie bevat:
-- Uitleg over de werking van het winkelmandje
-- De volledige reservatieflow van winkelmandje tot bevestiging
-- Toelichting bij de securityconfiguratie
-- Motivatie van belangrijke designkeuzes
+
+Naast deze README werd **aparte technische documentatie** voorzien, conform de opdrachtvereisten.
+
+📁 **Bestand:** `DOCUMENTATION_SERVICES.md`
+
+Deze documentatie focust specifiek op de **service-laag**, aangezien daar de kernlogica van de applicatie is geïmplementeerd.
+
+### De documentatie bevat onder andere:
+- Gedetailleerde uitleg van de **winkelmandje- en reservatieflow**
+- Toelichting bij de **beschikbaarheidsberekening**
+- Beschrijving van de **statusgebaseerde reservatielogica** (`IN_CART` → `CONFIRMED`)
+- Uitleg bij **complexe service-methoden**
+- Motivatie van belangrijke **architecturale en designkeuzes**
+- Toelichting bij **exception handling** en foutafhandeling
+
+Eenvoudige methoden zoals getters, setters en standaard CRUD-operaties worden bewust **niet** toegelicht.
 
 ---
 
