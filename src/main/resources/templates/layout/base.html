@@ -17,11 +17,19 @@
         <ul class="nav-menu">
             <li><a th:href="@{/}">Home</a></li>
 
+            <!-- ADMIN -->
             <li sec:authorize="hasRole('ADMIN')" class="dropdown">
                 <a href="#" class="dropdown-toggle">Admin ▾</a>
                 <ul class="dropdown-menu">
-                    <li><a th:href="@{/admin/equipment}">Materiaal Beheer</a></li>
-                    <li><a th:href="@{/admin/rentals}">Reserveringen Beheren</a></li>
+                    <li>
+                        <a th:href="@{/admin/equipment}">Materiaal Beheer</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/rentals}">Reserveringen Beheer</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/users}">Gebruikers Beheer</a>
+                    </li>
                 </ul>
             </li>
 
@@ -32,7 +40,7 @@
                 <a href="#" class="dropdown-toggle">Mijn Account ▾</a>
                 <ul class="dropdown-menu">
                     <li><a th:href="@{/profile}">Profiel</a></li>
-                    <li><a th:href="@{/profile/rentals}">Mijn Reserveringen</a></li>
+                    <li><a th:href="@{/profile/rentals}">Reserveringen</a></li>
                     <li><a th:href="@{/cart}">Winkelmand</a></li>
                 </ul>
             </li>
@@ -61,6 +69,7 @@
         </ul>
     </div>
 </nav>
+
 
 
 <main class="container">
