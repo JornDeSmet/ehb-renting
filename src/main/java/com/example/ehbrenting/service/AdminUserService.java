@@ -5,10 +5,10 @@ import com.example.ehbrenting.exceptions.EmailAlreadyExistsException;
 import com.example.ehbrenting.exceptions.UsernameAlreadyExistsException;
 import com.example.ehbrenting.model.User;
 import com.example.ehbrenting.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AdminUserService {
@@ -22,9 +22,15 @@ public class AdminUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ================= LIST =================
-    public List<User> findAll() {
-        return userRepository.findAllByOrderByUsernameAsc();
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAllByOrderByUsernameAsc(pageable);
+    }
+
+    public Page<User> search(String keyword, Pageable pageable) {
+        return userRepository
+                .findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+                        keyword, keyword, keyword, keyword, pageable
+                );
     }
 
     // ================= FIND =================

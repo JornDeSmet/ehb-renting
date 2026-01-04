@@ -13,6 +13,29 @@
     <div class="page-header">
         <h1>Reserveringen Beheren</h1>
     </div>
+    <form method="get" th:action="@{/admin/rentals}" class="search-bar">
+
+        <input type="text"
+               name="keyword"
+               placeholder="Zoek gebruiker of product..."
+               th:value="${keyword}"
+               class="search-input"/>
+
+        <select name="status" class="search-input">
+            <option value="">Alle statussen</option>
+            <option th:each="s : ${statuses}"
+                    th:value="${s}"
+                    th:text="${s}"
+                    th:selected="${s == status}">
+            </option>
+        </select>
+
+        <input type="date" name="startDate" th:value="${startDate}" class="search-input"/>
+        <input type="date" name="endDate" th:value="${endDate}" class="search-input"/>
+
+        <button type="submit" class="btn-primary">Filter</button>
+    </form>
+
 
     <div class="table-container">
         <table class="admin-table">
@@ -45,6 +68,78 @@
             </tbody>
         </table>
     </div>
+    <div class="pagination" th:if="${totalPages > 1}">
+
+        <!-- Vorige -->
+        <a th:if="${currentPage > 0}"
+           th:href="@{/admin/rentals(
+           page=${currentPage - 1},
+           keyword=${keyword},
+           status=${status},
+           startDate=${startDate},
+           endDate=${endDate}
+       )}"
+           class="page-btn">
+            ← Vorige
+        </a>
+
+        <!-- Eerste pagina + ... -->
+        <span th:if="${startPage > 0}">
+        <a th:href="@{/admin/rentals(
+            page=0,
+            keyword=${keyword},
+            status=${status},
+            startDate=${startDate},
+            endDate=${endDate}
+        )}"
+           class="page-btn">1</a>
+        <span class="dots">…</span>
+    </span>
+
+        <!-- Midden pagina's -->
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/admin/rentals(
+            page=${i},
+            keyword=${keyword},
+            status=${status},
+            startDate=${startDate},
+            endDate=${endDate}
+        )}"
+           th:text="${i + 1}"
+           class="page-btn"
+           th:classappend="${i == currentPage} ? ' active' : ''">
+        </a>
+    </span>
+
+        <!-- Laatste pagina + ... -->
+        <span th:if="${endPage < totalPages - 1}">
+        <span class="dots">…</span>
+        <a th:href="@{/admin/rentals(
+            page=${totalPages - 1},
+            keyword=${keyword},
+            status=${status},
+            startDate=${startDate},
+            endDate=${endDate}
+        )}"
+           class="page-btn"
+           th:text="${totalPages}">
+        </a>
+    </span>
+
+        <!-- Volgende -->
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/admin/rentals(
+           page=${currentPage + 1},
+           keyword=${keyword},
+           status=${status},
+           startDate=${startDate},
+           endDate=${endDate}
+       )}"
+           class="page-btn">
+            Volgende →
+        </a>
+    </div>
+
 </main>
 
 <footer class="footer">

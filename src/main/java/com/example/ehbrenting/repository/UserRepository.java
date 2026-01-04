@@ -1,6 +1,8 @@
 package com.example.ehbrenting.repository;
 
 import com.example.ehbrenting.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,8 +16,15 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     boolean existsByEmail(String email);
 
-    List<User> findAllByOrderByUsernameAsc();
+    Page<User> findAllByOrderByUsernameAsc(Pageable pageable);
 
+    Page<User> findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+            String username,
+            String email,
+            String firstName,
+            String lastName,
+            Pageable pageable
+    );
 
 
 }

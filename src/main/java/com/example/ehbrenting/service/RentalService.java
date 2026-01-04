@@ -4,7 +4,10 @@ import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.model.User;
 import com.example.ehbrenting.repository.RentalRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +42,21 @@ public class RentalService {
             existingRental.setStatus(rental.getStatus());
             rentalRepository.save(existingRental);
         });
+    }
+
+    public Page<Rental> searchAndFilter(
+            String keyword,
+            Rental.RentalStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable
+    ) {
+        return rentalRepository.searchAndFilter(
+                (keyword == null || keyword.isBlank()) ? null : keyword,
+                status,
+                startDate,
+                endDate,
+                pageable
+        );
     }
 }

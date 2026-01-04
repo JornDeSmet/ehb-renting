@@ -10,6 +10,8 @@ import com.example.ehbrenting.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,26 +37,6 @@ public class EquipmentService {
                 .toList();
     }
 
-    public List<EquipmentDTO> findAllActive() {
-        return repository.findByActiveTrue().stream()
-                .map(mapper::toDTO)
-                .toList();
-    }
-
-    public List<EquipmentDTO> findActiveByCategory(String category) {
-        if (category == null || category.isBlank()) {
-            return findAllActive();
-        }
-        return repository.findByCategoryAndActiveTrue(category).stream()
-                .map(mapper::toDTO)
-                .toList();
-    }
-
-    public List<EquipmentDTO> searchByName(String query) {
-        return repository.findByNameContainingIgnoreCase(query).stream()
-                .map(mapper::toDTO)
-                .toList();
-    }
 
     public EquipmentDTO findByIdOrThrow(Long id) {
         return repository.findById(id)
@@ -75,5 +57,33 @@ public class EquipmentService {
     public List<String> findActiveCategories() {
         return repository.findDistinctActiveCategories();
     }
+
+    public Page<EquipmentDTO> findAll(Pageable pageable) {
+        return repository.findAllByOrderByNameAsc(pageable)
+                .map(mapper::toDTO);
+    }
+
+    public Page<EquipmentDTO> search(String keyword, Pageable pageable) {
+        return repository
+                .findByNameContainingIgnoreCaseOrderByNameAsc(keyword, pageable)
+                .map(mapper::toDTO);
+    }
+
+    public Page<EquipmentDTO> findAllActive(Pageable pageable) {
+        return repository.findByActiveTrue(pageable)
+                .map(mapper::toDTO);
+    }
+
+    public Page<EquipmentDTO> findActiveByCategory(String category, Pageable pageable) {
+        return repository.findByCategoryAndActiveTrue(category, pageable)
+                .map(mapper::toDTO);
+    }
+
+    public Page<EquipmentDTO> searchByName(String query, Pageable pageable) {
+        return repository.findByNameContainingIgnoreCaseAndActiveTrue(query, pageable)
+                .map(mapper::toDTO);
+    }
+
+
 
 }

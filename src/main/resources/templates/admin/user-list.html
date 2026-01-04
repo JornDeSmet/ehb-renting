@@ -16,6 +16,18 @@
         <h1>Gebruikersbeheer</h1>
         <a th:href="@{/admin/users/add}" class="btn-primary">+ Nieuwe gebruiker</a>
     </div>
+    <form method="get" th:action="@{/admin/users}" class="search-bar">
+        <input type="text"
+               name="keyword"
+               placeholder="Zoek op naam of email..."
+               th:value="${keyword}"
+               class="search-input"/>
+
+        <button type="submit" class="btn-primary">
+            Zoeken
+        </button>
+    </form>
+
 
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 
@@ -52,6 +64,47 @@
             </tbody>
         </table>
     </div>
+    <div class="pagination" th:if="${totalPages > 1}">
+
+        <!-- Vorige -->
+        <a th:if="${currentPage > 0}"
+           th:href="@{/admin/users(page=${currentPage - 1})}"
+           class="page-btn">
+            ← Vorige
+        </a>
+
+        <!-- Eerste pagina + ... -->
+        <span th:if="${startPage > 0}">
+        <a th:href="@{/admin/users(page=0)}" class="page-btn">1</a>
+        <span class="dots">…</span>
+    </span>
+
+        <!-- Midden pagina's -->
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/admin/users(page=${i})}"
+           th:text="${i + 1}"
+           class="page-btn"
+           th:classappend="${i == currentPage} ? ' active' : ''">
+        </a>
+    </span>
+
+        <!-- Laatste pagina + ... -->
+        <span th:if="${endPage < totalPages - 1}">
+        <span class="dots">…</span>
+        <a th:href="@{/admin/users(page=${totalPages - 1})}"
+           class="page-btn"
+           th:text="${totalPages}">
+        </a>
+    </span>
+
+        <!-- Volgende -->
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/admin/users(page=${currentPage + 1})}"
+           class="page-btn">
+            Volgende →
+        </a>
+    </div>
+
 
 </main>
 

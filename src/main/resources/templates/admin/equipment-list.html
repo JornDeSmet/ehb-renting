@@ -14,6 +14,18 @@
         <h1 th:text="${title}">Materiaal Beheer</h1>
         <a th:href="@{/admin/equipment/add}" class="btn-primary">+ Nieuw Materiaal</a>
     </div>
+    <form method="get" th:action="@{/admin/equipment}" class="search-bar">
+        <input type="text"
+               name="keyword"
+               placeholder="Zoek materiaal..."
+               th:value="${keyword}"
+               class="search-input"/>
+
+        <button type="submit" class="btn-primary">
+            Zoeken
+        </button>
+    </form>
+
 
     <div th:if="${param.success}" class="alert alert-success">
         <span th:if="${param.success[0] == 'added'}">Nieuw materiaal succesvol toegevoegd!</span>
@@ -60,6 +72,38 @@
             </tbody>
         </table>
     </div>
+    <div class="pagination" th:if="${totalPages > 1}">
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/admin/equipment(page=${currentPage - 1}, keyword=${keyword})}"
+           class="page-btn">← Vorige</a>
+
+        <span th:if="${startPage > 0}">
+        <a th:href="@{/admin/equipment(page=0, keyword=${keyword})}" class="page-btn">1</a>
+        <span class="dots">…</span>
+    </span>
+
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/admin/equipment(page=${i}, keyword=${keyword})}"
+           th:text="${i + 1}"
+           class="page-btn"
+           th:classappend="${i == currentPage} ? ' active' : ''">
+        </a>
+    </span>
+
+        <span th:if="${endPage < totalPages - 1}">
+        <span class="dots">…</span>
+        <a th:href="@{/admin/equipment(page=${totalPages - 1}, keyword=${keyword})}"
+           class="page-btn"
+           th:text="${totalPages}">
+        </a>
+    </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/admin/equipment(page=${currentPage + 1}, keyword=${keyword})}"
+           class="page-btn">Volgende →</a>
+    </div>
+
 </main>
 
 <footer class="footer">
