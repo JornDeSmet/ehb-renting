@@ -36,21 +36,16 @@ public class CartController {
             return "redirect:/login";
         }
 
-        try {
-            cartService.addToCart(user, cartItemDto);
-            redirectAttributes.addFlashAttribute(
-                    "success",
-                    "Item toegevoegd aan winkelwagen"
-            );
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute(
-                    "error",
-                    e.getMessage()
-            );
-        }
+        cartService.addToCart(user, cartItemDto);
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Item toegevoegd aan winkelwagen"
+        );
 
         return "redirect:/equipment/" + cartItemDto.getEquipmentId();
     }
+
 
 
     @GetMapping

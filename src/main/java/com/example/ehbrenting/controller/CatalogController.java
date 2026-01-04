@@ -2,6 +2,7 @@ package com.example.ehbrenting.controller;
 
 import com.example.ehbrenting.dto.AvailabilityDTO;
 import com.example.ehbrenting.dto.EquipmentDTO;
+import com.example.ehbrenting.dto.PageRangeDTO;
 import com.example.ehbrenting.service.EquipmentAvailabilityService;
 import com.example.ehbrenting.service.EquipmentService;
 import org.springframework.data.domain.Page;
@@ -38,47 +39,27 @@ public class CatalogController {
             @RequestParam(required = false) String search,
             Model model
     ) {
-        Page<EquipmentDTO> equipmentPage;
+        Page<EquipmentDTO> equipmentPage =
+                equipmentService.getCatalogPage(page, size, category, search);
 
-        if (search != null && !search.isBlank()) {
-            equipmentPage = equipmentService.searchByName(
-                    search,
-                    PageRequest.of(page, size)
-            );
-            model.addAttribute("searchQuery", search);
-        } else if (category != null && !category.isBlank()) {
-            equipmentPage = equipmentService.findActiveByCategory(
-                    category,
-                    PageRequest.of(page, size)
-            );
-            model.addAttribute("selectedCategory", category);
-        } else {
-            equipmentPage = equipmentService.findAllActive(
-                    PageRequest.of(page, size)
-            );
-        }
-
-        int totalPages = equipmentPage.getTotalPages();
-        int startPage = Math.max(0, page - 2);
-        int endPage = Math.min(totalPages - 1, page + 2);
-
-        if (totalPages <= 5) {
-            startPage = 0;
-            endPage = totalPages - 1;
-        }
+        PageRangeDTO pageRange =
+                equipmentService.calculatePageRange(page, equipmentPage.getTotalPages());
 
         model.addAttribute("equipmentList", equipmentPage.getContent());
         model.addAttribute("categories", equipmentService.findActiveCategories());
 
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", equipmentPage.getTotalPages());
+        model.addAttribute("startPage", pageRange.startPage());
+        model.addAttribute("endPage", pageRange.endPage());
 
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("searchQuery", search);
         model.addAttribute("title", "Catalogus");
 
         return "catalog/catalog";
     }
+
 
 
 

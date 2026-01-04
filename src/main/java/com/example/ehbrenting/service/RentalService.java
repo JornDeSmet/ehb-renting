@@ -1,5 +1,7 @@
 package com.example.ehbrenting.service;
 
+import com.example.ehbrenting.dto.CartItemDTO;
+import com.example.ehbrenting.model.Equipment;
 import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.model.User;
 import com.example.ehbrenting.repository.RentalRepository;
@@ -35,6 +37,7 @@ public class RentalService {
     public Optional<Rental> findById(Long id) {
         return rentalRepository.findById(id);
     }
+
 
     public void updateRental(Long id, Rental rental) {
         rentalRepository.findById(id).ifPresent(existingRental -> {

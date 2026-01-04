@@ -1,6 +1,7 @@
 package com.example.ehbrenting.service;
 
 import com.example.ehbrenting.dto.AvailabilityDTO;
+import com.example.ehbrenting.dto.EquipmentDTO;
 import com.example.ehbrenting.exceptions.InsufficientAvailabilityException;
 import com.example.ehbrenting.exceptions.InvalidRentalPeriodException;
 import com.example.ehbrenting.model.Equipment;
@@ -133,4 +134,20 @@ public class EquipmentAvailabilityService {
                 .mapToInt(Rental::getQuantity)
                 .sum();
     }
+
+    public boolean isEquipmentAvailable(
+            Long equipmentId,
+            EquipmentDTO equipment,
+            LocalDate from,
+            LocalDate to
+    ) {
+        if (!equipment.isActive()) {
+            return false;
+        }
+
+        return calculateAvailability(equipmentId, from, to)
+                .stream()
+                .anyMatch(a -> a.getAvailable() > 0);
+    }
+
 }

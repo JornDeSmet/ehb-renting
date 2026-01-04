@@ -6,7 +6,7 @@ import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.model.User;
 import com.example.ehbrenting.repository.EquipmentRepository;
 import com.example.ehbrenting.repository.RentalRepository;
-import com.example.ehbrenting.repository.UserRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +28,16 @@ public class CartService {
         this.equipmentRepository = equipmentRepository;
         this.availabilityService = availabilityService;
     }
+    private Rental createRental(User user, Equipment equipment, CartItemDTO dto) {
+        Rental rental = new Rental();
+        rental.setUser(user);
+        rental.setEquipment(equipment);
+        rental.setQuantity(dto.getQuantity());
+        rental.setStartDate(dto.getStartDate());
+        rental.setEndDate(dto.getEndDate());
+        rental.setStatus(Rental.RentalStatus.IN_CART);
+        return rental;
+    }
 
 
     @Transactional
@@ -40,18 +50,16 @@ public class CartService {
                 dto.getQuantity()
         );
 
-        Equipment equipment = equipmentRepository.findById(dto.getEquipmentId())
-                .orElseThrow(() -> new IllegalArgumentException("Equipment not found"));
+        Equipment equipment = findEquipment(dto.getEquipmentId());
 
-        Rental rental = new Rental();
-        rental.setUser(user);
-        rental.setEquipment(equipment);
-        rental.setQuantity(dto.getQuantity());
-        rental.setStartDate(dto.getStartDate());
-        rental.setEndDate(dto.getEndDate());
-        rental.setStatus(Rental.RentalStatus.IN_CART);
+        Rental rental = createRental(user, equipment, dto);
 
         rentalRepository.save(rental);
+    }
+
+    private Equipment findEquipment(Long equipmentId) {
+        return equipmentRepository.findById(equipmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Equipment not found"));
     }
 
 

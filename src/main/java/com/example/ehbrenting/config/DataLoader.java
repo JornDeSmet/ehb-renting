@@ -48,7 +48,6 @@ public class DataLoader implements CommandLineRunner {
     private void loadUsers() {
         if (userRepository.count() > 0) return;
 
-        // Admin
         User admin = new User();
         admin.setUsername("admin");
         admin.setEmail("admin@ehbschool.be");
