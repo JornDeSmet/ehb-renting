@@ -71,4 +71,9 @@ public class EquipmentService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public List<String> findActiveCategories() {
+        return repository.findDistinctActiveCategories();
+    }
+
 }

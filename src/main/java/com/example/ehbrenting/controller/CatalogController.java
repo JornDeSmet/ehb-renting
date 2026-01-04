@@ -48,10 +48,12 @@ public class CatalogController {
         }
 
         model.addAttribute("equipmentList", equipmentList);
+        model.addAttribute("categories", equipmentService.findActiveCategories());
         model.addAttribute("title", "Catalogus");
 
         return "catalog/catalog";
     }
+
 
     /* ===================== DETAILS ===================== */
 

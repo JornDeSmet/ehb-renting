@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Mijn Reserveringen</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{layout/base :: navbar}"></div>
+
+<main class="container">
+
+    <div class="page-header">
+        <h1>Mijn Reserveringen</h1>
+    </div>
+
+    <div th:if="${rentals.isEmpty()}" class="empty-state">
+        <p>Je hebt geen reserveringen.</p>
+    </div>
+
+    <div th:unless="${rentals.isEmpty()}" class="table-container">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Aantal</th>
+                <th>Startdatum</th>
+                <th>Einddatum</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rental : ${rentals}">
+                <td th:text="${rental.equipment.name}"></td>
+                <td th:text="${rental.quantity}"></td>
+                <td th:text="${#temporals.format(rental.startDate,'dd-MM-yyyy')}"></td>
+                <td th:text="${#temporals.format(rental.endDate,'dd-MM-yyyy')}"></td>
+                <td th:text="${rental.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
+</body>
+</html>

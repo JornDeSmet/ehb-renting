@@ -111,39 +111,10 @@
         </form>
     </div>
 
-    <!-- ================= RESERVERINGEN ================= -->
-    <h2>Mijn Reserveringen</h2>
-
-    <div th:if="${rentals.isEmpty()}" class="empty-state">
-        <p>Je hebt geen reserveringen.</p>
-    </div>
-
-    <div th:unless="${rentals.isEmpty()}" class="table-container">
-        <table class="admin-table">
-            <thead>
-            <tr>
-                <th>Product</th>
-                <th>Aantal</th>
-                <th>Startdatum</th>
-                <th>Einddatum</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="rental : ${rentals}">
-                <td th:text="${rental.equipment.name}"></td>
-                <td th:text="${rental.quantity}"></td>
-                <td th:text="${#temporals.format(rental.startDate,'dd-MM-yyyy')}"></td>
-                <td th:text="${#temporals.format(rental.endDate,'dd-MM-yyyy')}"></td>
-                <td th:text="${rental.status}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
 </main>
 
-<div th:replace="~{layout/base :: footer}"></div>
-
+<footer class="footer">
+    <div th:replace="~{layout/base :: footer}"></div>
+</footer>
 </body>
 </html>

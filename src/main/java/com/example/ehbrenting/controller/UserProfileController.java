@@ -4,7 +4,6 @@ import com.example.ehbrenting.dto.user.ChangePasswordDTO;
 import com.example.ehbrenting.dto.user.UserProfileDTO;
 import com.example.ehbrenting.exceptions.InvalidPasswordException;
 import com.example.ehbrenting.exceptions.PasswordMismatchException;
-import com.example.ehbrenting.model.Rental;
 import com.example.ehbrenting.model.User;
 import com.example.ehbrenting.service.RentalService;
 import com.example.ehbrenting.service.UserService;
@@ -16,37 +15,35 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Collections;
-import java.util.List;
 
 @Controller
 @RequestMapping("/profile")
 public class UserProfileController {
 
-    private final RentalService rentalService;
     private final UserService userService;
+    private final RentalService rentalService;
 
-    public UserProfileController(RentalService rentalService,
-                                 UserService userService) {
-        this.rentalService = rentalService;
+    public UserProfileController(UserService userService,
+                                 RentalService rentalService) {
         this.userService = userService;
+        this.rentalService = rentalService;
     }
 
+    /* ===================== PROFIEL PAGINA ===================== */
+
     @GetMapping
-    public String userProfile(
+    public String profile(
             @AuthenticationPrincipal User user,
             Model model
     ) {
         model.addAttribute("profile", userService.getProfile(user));
         model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
-        model.addAttribute("rentals", rentalService.findRentalsByUser(user));
         return "user/profile";
     }
 
-    // ===== PROFILE UPDATE =====
+    /* ===================== PROFIEL UPDATE ===================== */
+
     @PostMapping("/update")
     public String updateProfile(
             @AuthenticationPrincipal User user,
@@ -57,7 +54,6 @@ public class UserProfileController {
     ) {
         if (result.hasErrors()) {
             model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
-            model.addAttribute("rentals", rentalService.findRentalsByUser(user));
             return "user/profile";
         }
 
@@ -71,8 +67,8 @@ public class UserProfileController {
         return "redirect:/profile";
     }
 
+    /* ===================== WACHTWOORD WIJZIGEN ===================== */
 
-    // ===== PASSWORD CHANGE =====
     @PostMapping("/password")
     public String changePassword(
             @AuthenticationPrincipal User user,
@@ -83,7 +79,6 @@ public class UserProfileController {
     ) {
         if (result.hasErrors()) {
             model.addAttribute("profile", userService.getProfile(user));
-            model.addAttribute("rentals", rentalService.findRentalsByUser(user));
             return "user/profile";
         }
 
@@ -97,7 +92,6 @@ public class UserProfileController {
 
         if (result.hasErrors()) {
             model.addAttribute("profile", userService.getProfile(user));
-            model.addAttribute("rentals", rentalService.findRentalsByUser(user));
             return "user/profile";
         }
 
@@ -109,4 +103,15 @@ public class UserProfileController {
         return "redirect:/profile";
     }
 
+    /* ===================== MIJN RESERVERINGEN ===================== */
+
+    @GetMapping("/rentals")
+    public String myRentals(
+            @AuthenticationPrincipal User user,
+            Model model
+    ) {
+        model.addAttribute("rentals", rentalService.findRentalsByUser(user));
+        model.addAttribute("title", "Mijn Reserveringen");
+        return "user/rentals";
+    }
 }

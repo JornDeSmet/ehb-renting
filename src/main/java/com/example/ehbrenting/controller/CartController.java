@@ -90,6 +90,6 @@ public class CartController {
                 "Bestelling succesvol bevestigd"
         );
 
-        return "redirect:/profile";
+        return "redirect:/profile/rentals";
     }
 }
