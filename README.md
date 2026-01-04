@@ -56,67 +56,103 @@ Beheerders kunnen het materiaal en de reservaties opvolgen en beheren.
 
 ### 👤 Gebruikersfunctionaliteiten
 
-#### Authenticatie
-- Registreren van nieuwe gebruikers
-- Inloggen en uitloggen
-- Wachtwoorden veilig gehashed met BCrypt
+#### 🔐 Authenticatie
+- Registratie van nieuwe gebruikers  
+- Inloggen en uitloggen  
+- Wachtwoorden veilig gehashed met **BCrypt**
 
-#### Catalogus
-- Overzicht van alle beschikbare materialen
-- Filteren op categorie (bv. kabels, belichting, panelen)
-- Detailpagina per product
+#### 📦 Catalogus
+- Overzicht van alle actieve materialen  
+- Filteren op categorie  
+- Zoeken op naam  
+- Detailpagina per product met beschikbaarheidsinformatie  
 
-#### Winkelmandje
-- Producten toevoegen aan een winkelmandje
-- Aantallen aanpassen of items verwijderen
-- Winkelmandje gekoppeld aan de gebruikerssessie
+#### 🛒 Winkelmandje
+- Producten toevoegen aan een winkelmandje  
+- Winkelmandje gekoppeld aan de gebruiker  
+- Validatie van beschikbaarheid per periode  
 
-#### Reservatie & Checkout
-- Selecteren van een huurperiode
-- Bevestigen van een reservatie
-- Overzicht van gereserveerd materiaal
+#### 📅 Reservatie & Checkout
+- Selecteren van een huurperiode  
+- Bevestigen van een reservatie  
+- Reservaties krijgen de status `IN_CART` of `CONFIRMED`  
 
-#### Gebruikersprofiel
-- Inzien van persoonlijke gegevens
-- Overzicht van gemaakte reservaties
+#### 👤 Gebruikersprofiel
+- Inzien en aanpassen van profielgegevens  
+- Wachtwoord wijzigen  
+- Overzicht van eigen reservaties  
 
 ---
 
 ### 🛠️ Beheerdersfunctionaliteiten (Admin)
 
-#### Materiaalbeheer
-- Toevoegen van nieuw materiaal
-- Bewerken van bestaand materiaal
-- Verwijderen van materiaal
-- Beheer van categorieën
+#### 🧰 Materiaalbeheer
+- Toevoegen van nieuw materiaal  
+- Bewerken van bestaand materiaal  
+- Verwijderen van materiaal  
+- Beheer van categorieën  
+- Activeren en deactiveren van materiaal  
 
-#### Reservatiebeheer
-- Overzicht van alle reservaties
-- Aanpassen van reservatiestatus
-- Opvolgen van beschikbaarheid
+#### 📋 Reservatiebeheer
+- Overzicht van alle reservaties  
+- Aanpassen van reservatiestatus  
+- Inzicht in beschikbaarheid van materiaal  
+
+#### 👥 Gebruikersbeheer
+- Overzicht van alle gebruikers  
+- Aanmaken van nieuwe gebruikers  
+- Bewerken van gebruikersgegevens  
+- Toekennen of wijzigen van gebruikersrollen (`USER`, `ADMIN`)  
+
 
 ---
 
-## 🧱 Architectuur
+### 🧩 Architectuurlagen
 
-De applicatie volgt een **klassieke gelaagde architectuur**:
+#### 🔹 Controller layer (`controller`)
+- Verwerkt HTTP-requests
+- Bevat **geen businesslogica**
+- Roept uitsluitend services aan
+- Verantwoordelijk voor model → view binding
 
-- **Controller layer**  
-  Verwerkt HTTP-requests en verbindt frontend met backend.
+#### 🔹 Service layer (`service`)
+- Bevat alle **businesslogica**
+- Afhandeling van:
+  - reservaties
+  - winkelmandje
+  - beschikbaarheid
+  - gebruikersbeheer
+- Gebruikt helper-methodes om verantwoordelijkheden te scheiden
+- Transactionele logica via `@Transactional`
 
-- **Service layer**  
-  Bevat alle businesslogica (winkelmandje, reservaties, gebruikers).
+#### 🔹 Repository layer (`repository`)
+- Data-access via **Spring Data JPA**
+- Geen businesslogica
+- Communiceert rechtstreeks met de database
 
-- **Repository layer**  
-  Data-access via Spring Data JPA.
+#### 🔹 Model layer (`model`)
+- JPA-entities
+- Domeinrepresentatie van de applicatie
+- Bevat geen presentatie- of controllerlogica
 
-- **DTO’s**  
-  Beschermen de interne datamodellen en zorgen voor veilige data-overdracht.
+#### 🔹 DTO layer (`dto`)
+- Data Transfer Objects voor veilige communicatie
+- Beschermen interne entities
+- Worden gebruikt tussen controller ↔ service ↔ view
 
-Deze aanpak zorgt voor:
-- Onderhoudbare code
-- Duidelijke verantwoordelijkheden
-- Betere testbaarheid en beveiliging
+#### 🔹 Mapper layer (`mapper`)
+- Verantwoordelijk voor conversie tussen entities en DTO’s
+- Houdt mappinglogica uit services en controllers
+
+#### 🔹 Exception layer (`exceptions`)
+- Custom domein-exceptions
+- Centrale foutafhandeling via `GlobalExceptionHandler`
+- Controllers bevatten geen `try/catch`
+
+#### 🔹 Config layer (`config`)
+- Spring Security configuratie
+- Web- en applicatieconfiguratie
+- Routing en toegangscontrole
 
 ---
 
@@ -128,17 +164,6 @@ Deze aanpak zorgt voor:
   - `ADMIN` – beheerder
 - Wachtwoorden worden **gehashed met BCrypt**
 - Beveiligde routes voor admin-functionaliteit
-
----
-
-## 🛒 Winkelmandje & Reservaties
-
-- Elke ingelogde gebruiker heeft een **sessiegebaseerd winkelmandje**
-- Producten worden tijdelijk opgeslagen in de sessie
-- Bij checkout wordt de inhoud van het winkelmandje:
-  - gevalideerd
-  - omgezet naar een reservatie
-  - gekoppeld aan de gebruiker
 
 ---
 
@@ -168,6 +193,7 @@ mvn spring-boot:run
   - materiaal
   - categorieën
   - gebruikers
+  - reservaties
 
 ---
 
@@ -179,13 +205,13 @@ mvn spring-boot:run
   
 ### Testgebruiker
 
-Gebruiker: user@test.be
+Gebruiker: student1
 
 Wachtwoord: password
 
 ### Admin gebruiker
 
-Gebruiker: admin@test.be
+Gebruiker: admin
 
 Wachtwoord: admin123
 
@@ -220,3 +246,6 @@ Alle gegenereerde suggesties werden kritisch geëvalueerd en volledig begrepen.
   https://spring.io/projects/spring-security
 - Thymeleaf  
   https://www.thymeleaf.org
+- Chatgpt  
+  https://chatgpt.com/share/695ade5f-6bd4-8002-93c7-7113e0031542  
+  https://chatgpt.com/share/695ade88-3a54-8002-bae8-a40ca8f9c4ce
