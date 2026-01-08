@@ -79,7 +79,26 @@ public class UserProfileController {
             return "user/profile";
         }
 
-        userService.changePassword(user, dto);
+        try {
+            userService.changePassword(user, dto);
+        } catch (InvalidPasswordException e) {
+            result.rejectValue(
+                    "currentPassword",
+                    null,
+                    e.getMessage()
+            );
+        } catch (PasswordMismatchException e) {
+            result.rejectValue(
+                    "confirmNewPassword",
+                    null,
+                    e.getMessage()
+            );
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("profile", userService.getProfile(user));
+            return "user/profile";
+        }
 
         redirectAttributes.addFlashAttribute(
                 "successMessage",
@@ -88,6 +107,7 @@ public class UserProfileController {
 
         return "redirect:/profile";
     }
+
 
 
 
